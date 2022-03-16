@@ -13,20 +13,72 @@ namespace HuePlanner.Logic.DTOS.Users
         private int id;
         private string uuid = "";
         private string name = "";
+        private string surname = "";
         private string username = "";
         private string password = "";
         private string email = "";
+        private bool isAdmin = false;
+        private List<IUser> friends;
 
-        public User(int _id, string _uuid, string _name,string _username, string _password, string _email)
+        public User(int _id,  string _uuid, string _name, string _surname, string _username, string _password, string _email, bool _isAdmin)
         {
             id = _id;
             uuid = _uuid;
-            name = _name; 
-            username = _username;  
+            name = _name;
+            surname = _surname;
+            username = _username;
             password = _password;
             email = _email;
+            isAdmin = _isAdmin;
+            friends = new List<IUser>();
+
         }
-        
+        public User(int _id, string _uuid, string _name, string _surname, string _username, string _password, string _email, bool _isAdmin, List<IUser> _friends)
+        {
+            id = _id;
+            uuid = _uuid;
+            name = _name;
+            surname = _surname;
+            username = _username;
+            password = _password;
+            email = _email;
+            isAdmin = _isAdmin;
+            friends = _friends;
+
+        }
+        public User(string _uuid, string _name, string _username, string _password, string _email, bool _isAdmin)
+        {
+            uuid = _uuid;
+            name = _name;
+            username = _username;
+            password = _password;
+            email = _email;
+            isAdmin = _isAdmin;
+            friends = new List<IUser>();
+
+        }
+        public User(string _username, string _password, string _email)
+        {
+            username = _username;
+            password = _password;
+            email = _email;
+            friends = new List<IUser>();
+        }
+
+        public User(string _email, string _password)
+        {
+            email = _email;
+            password = _password;
+        }
+        public User(string _uuid)
+        {
+            uuid = _uuid;
+        }
+        public User()
+        {
+            friends = new List<IUser>();
+        }
+
         public string GetEmail()
         {
             return email;
@@ -80,6 +132,39 @@ namespace HuePlanner.Logic.DTOS.Users
         public void SetUUID(string _uuid)
         {
             uuid = _uuid;
+        }
+        public bool IsAdmin()
+        {
+            return isAdmin;
+        }
+        public void SetAdmin(bool admin)
+        {
+            isAdmin = admin;
+        }
+
+        public List<IUser> getFriends()
+        {
+            return friends;
+        }
+
+        public void addFriend(IUser user)
+        {
+            friends.Add(user);
+        }
+
+        public void removeFriend(IUser _user)
+        {
+            friends.Remove(_user);
+        }
+
+        public string getSurname()
+        {
+            return surname;
+        }
+
+        public void setSurname(string _surename)
+        {
+            surname = _surename;
         }
     }
 }

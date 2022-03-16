@@ -20,6 +20,10 @@ namespace HuePlanner.Logic.DTOS.Users.Interface
         public void SetUserName(string _username);
         public void SetPassword(string _password);
         public void SetEmail(string _email);
-
+        public List<IUser> getFriends();
+        public void addFriend(IUser _user);
+        public void removeFriend(IUser _user);
+        public string getSurname();
+        public void setSurname(string _surename);
     }
 }
