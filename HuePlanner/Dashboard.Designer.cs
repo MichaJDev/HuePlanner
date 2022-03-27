@@ -29,9 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
-            this.label1 = new System.Windows.Forms.Label();
             this.contentPanel = new System.Windows.Forms.Panel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.pbMin = new System.Windows.Forms.PictureBox();
             this.dragPanel = new System.Windows.Forms.Panel();
             this.pbClose = new System.Windows.Forms.PictureBox();
@@ -39,42 +37,20 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.lblwelcome = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.contentPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbMin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
             this.profilePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
-            this.Load += new EventHandler(OnLoad);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label1.Location = new System.Drawing.Point(32, 30);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(61, 24);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Name";
             // 
             // contentPanel
             // 
             this.contentPanel.AutoScroll = true;
             this.contentPanel.BackColor = System.Drawing.Color.Transparent;
-            this.contentPanel.Controls.Add(this.label1);
-            this.contentPanel.Controls.Add(this.textBox1);
             this.contentPanel.Location = new System.Drawing.Point(237, 23);
             this.contentPanel.Name = "contentPanel";
             this.contentPanel.Size = new System.Drawing.Size(563, 426);
             this.contentPanel.TabIndex = 12;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(35, 53);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(166, 23);
-            this.textBox1.TabIndex = 0;
             // 
             // pbMin
             // 
@@ -158,8 +134,7 @@
             this.Name = "Dashboard";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "z";
-            this.contentPanel.ResumeLayout(false);
-            this.contentPanel.PerformLayout();
+            this.Load += new System.EventHandler(this.OnLoad);
             ((System.ComponentModel.ISupportInitialize)(this.pbMin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).EndInit();
             this.profilePanel.ResumeLayout(false);
@@ -170,10 +145,7 @@
         }
 
         #endregion
-
-        private Label label1;
         private Panel contentPanel;
-        private TextBox textBox1;
         private PictureBox pbMin;
         private Panel dragPanel;
         private PictureBox pbClose;

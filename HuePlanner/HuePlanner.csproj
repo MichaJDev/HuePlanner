@@ -16,6 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Dashboard.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="EditParty.cs">
       <SubType>Form</SubType>
     </Compile>
