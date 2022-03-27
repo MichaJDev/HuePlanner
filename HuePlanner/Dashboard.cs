@@ -23,6 +23,13 @@ namespace HuePlanner
              * RefreshContent() Erroring on InvalidOperationException something to do with threads 
              */
             // TODO: Revisit
+            // Revisit count: 8
+            /*
+             * tried numerous clearing of controls by contentPanel.Controls.Clear
+             * and foreach(Controls c in contentPanel.Controls){ c.dispose(); contentPanel.Remove(c)}
+             * 
+             * with no luck and only InvalidOperationExceptions
+             */
             //RefreshContent();
         }
         public const int WM_NCLBUTTONDOWN = 0xA1;
