@@ -36,9 +36,9 @@ namespace HuePlanner.Data.Users
                 {
                     command.ExecuteNonQuery();
                 }
-                catch (MySqlException ex)
+                catch (MySqlException e)
                 {
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine(e.ToString());
                 }
                 con.Close();
 
@@ -84,13 +84,13 @@ namespace HuePlanner.Data.Users
         }
         private IUser GetByUUID(IUser user)
         {
-            IUser nUser = new User();
+            IUser nUser = Get(user);
             using (MySqlConnection con = new MySqlConnection(conString))
             {
-                string query = "SELECT * FROM Users WHERE email = @email";
+                string query = "SELECT * FROM Users WHERE uuid = @uuid";
                 MySqlCommand command = new MySqlCommand(query, con);
-                command.Parameters.Add("@email", MySqlDbType.VarChar);
-                command.Parameters["@email"].Value = user.GetEmail();
+                command.Parameters.Add("@uuid", MySqlDbType.VarChar);
+                command.Parameters["@uuid"].Value = user.GetUUID();
                 MySqlDataReader sqlReader = command.ExecuteReader();
                 con.Open();
                 while (sqlReader.Read())

@@ -50,3 +50,4 @@ C:\Users\xflak\source\repos\HuePlanner\HuePlanner\bin\Debug\net6.0-windows\Ubiet
 C:\Users\xflak\source\repos\HuePlanner\HuePlanner\bin\Debug\net6.0-windows\ZstdNet.dll
 C:\Users\xflak\source\repos\HuePlanner\HuePlanner\obj\Debug\net6.0-windows\refint\HuePlanner.dll
 C:\Users\xflak\source\repos\HuePlanner\HuePlanner\obj\Debug\net6.0-windows\HuePlanner.Form.resources
+C:\Users\xflak\source\repos\HuePlanner\HuePlanner\obj\Debug\net6.0-windows\HuePlanner.EditParty.resources

@@ -5,27 +5,10 @@ namespace HuePlanner.Logic.DTOS.Consumables
 {
     public class Consumable : IConsumable
     {
-        private string name = "";
-        private PackagingType packaging;
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public PackagingType Packaging {get;set;}
 
-        public string GetName()
-        {
-            return name;
-        }
-
-        public void SetName(string _name)
-        {
-            name = _name;
-        }
-
-        public void SetPackagingType(PackagingType _packaging)
-        {
-            packaging = _packaging;
-        }
-
-        PackagingType IConsumable.GetType()
-        {
-            return packaging;
-        }
+      
     }
 }

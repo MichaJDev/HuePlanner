@@ -1,6 +1,6 @@
 ﻿namespace HuePlanner
 {
-    partial class Dashboard
+    partial class EditParty
     {
         /// <summary>
         /// Required designer variable.
@@ -28,35 +28,53 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
-            this.label1 = new System.Windows.Forms.Label();
-            this.contentPanel = new System.Windows.Forms.Panel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.pbMin = new System.Windows.Forms.PictureBox();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditParty));
             this.dragPanel = new System.Windows.Forms.Panel();
+            this.pbMin = new System.Windows.Forms.PictureBox();
             this.pbClose = new System.Windows.Forms.PictureBox();
+            this.contentPanel = new System.Windows.Forms.Panel();
             this.profilePanel = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.lblwelcome = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.contentPanel.SuspendLayout();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbMin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
+            this.contentPanel.SuspendLayout();
             this.profilePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
-            this.Load += new EventHandler(OnLoad);
             // 
-            // label1
+            // dragPanel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label1.Location = new System.Drawing.Point(32, 30);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(61, 24);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Name";
+            this.dragPanel.BackColor = System.Drawing.Color.Transparent;
+            this.dragPanel.Location = new System.Drawing.Point(1, 1);
+            this.dragPanel.Name = "dragPanel";
+            this.dragPanel.Size = new System.Drawing.Size(711, 25);
+            this.dragPanel.TabIndex = 0;
+            this.dragPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dragPanel_MouseDown);
+            // 
+            // pbMin
+            // 
+            this.pbMin.Image = global::HuePlanner.Properties.Resources.minimize;
+            this.pbMin.Location = new System.Drawing.Point(709, 1);
+            this.pbMin.Name = "pbMin";
+            this.pbMin.Size = new System.Drawing.Size(45, 25);
+            this.pbMin.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbMin.TabIndex = 3;
+            this.pbMin.TabStop = false;
+            // 
+            // pbClose
+            // 
+            this.pbClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pbClose.Image = global::HuePlanner.Properties.Resources.Close;
+            this.pbClose.Location = new System.Drawing.Point(754, 1);
+            this.pbClose.Name = "pbClose";
+            this.pbClose.Size = new System.Drawing.Size(46, 25);
+            this.pbClose.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbClose.TabIndex = 2;
+            this.pbClose.TabStop = false;
             // 
             // contentPanel
             // 
@@ -67,43 +85,7 @@
             this.contentPanel.Location = new System.Drawing.Point(237, 23);
             this.contentPanel.Name = "contentPanel";
             this.contentPanel.Size = new System.Drawing.Size(563, 426);
-            this.contentPanel.TabIndex = 12;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(35, 53);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(166, 23);
-            this.textBox1.TabIndex = 0;
-            // 
-            // pbMin
-            // 
-            this.pbMin.Image = global::HuePlanner.Properties.Resources.minimize;
-            this.pbMin.Location = new System.Drawing.Point(709, 1);
-            this.pbMin.Name = "pbMin";
-            this.pbMin.Size = new System.Drawing.Size(45, 25);
-            this.pbMin.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbMin.TabIndex = 10;
-            this.pbMin.TabStop = false;
-            // 
-            // dragPanel
-            // 
-            this.dragPanel.BackColor = System.Drawing.Color.Transparent;
-            this.dragPanel.Location = new System.Drawing.Point(1, 1);
-            this.dragPanel.Name = "dragPanel";
-            this.dragPanel.Size = new System.Drawing.Size(711, 25);
-            this.dragPanel.TabIndex = 8;
-            // 
-            // pbClose
-            // 
-            this.pbClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pbClose.Image = global::HuePlanner.Properties.Resources.Close;
-            this.pbClose.Location = new System.Drawing.Point(754, 1);
-            this.pbClose.Name = "pbClose";
-            this.pbClose.Size = new System.Drawing.Size(46, 25);
-            this.pbClose.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbClose.TabIndex = 9;
-            this.pbClose.TabStop = false;
+            this.contentPanel.TabIndex = 7;
             // 
             // profilePanel
             // 
@@ -114,7 +96,7 @@
             this.profilePanel.Location = new System.Drawing.Point(1, 21);
             this.profilePanel.Name = "profilePanel";
             this.profilePanel.Size = new System.Drawing.Size(236, 428);
-            this.profilePanel.TabIndex = 11;
+            this.profilePanel.TabIndex = 6;
             // 
             // panel2
             // 
@@ -143,25 +125,43 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // Dashboard
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(35, 53);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(166, 23);
+            this.textBox1.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label1.Location = new System.Drawing.Point(32, 30);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(61, 24);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Name";
+            // 
+            // EditParty
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::HuePlanner.Properties.Resources.bg;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.contentPanel);
+            this.Controls.Add(this.profilePanel);
             this.Controls.Add(this.pbMin);
             this.Controls.Add(this.dragPanel);
             this.Controls.Add(this.pbClose);
-            this.Controls.Add(this.profilePanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "Dashboard";
+            this.Name = "EditParty";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "z";
-            this.contentPanel.ResumeLayout(false);
-            this.contentPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbMin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).EndInit();
+            this.contentPanel.ResumeLayout(false);
+            this.contentPanel.PerformLayout();
             this.profilePanel.ResumeLayout(false);
             this.profilePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -171,15 +171,15 @@
 
         #endregion
 
-        private Label label1;
-        private Panel contentPanel;
-        private TextBox textBox1;
-        private PictureBox pbMin;
         private Panel dragPanel;
+        private PictureBox pbMin;
         private PictureBox pbClose;
+        private Panel contentPanel;
         private Panel profilePanel;
         private Panel panel2;
         private Label lblwelcome;
         private PictureBox pictureBox1;
+        private Label label1;
+        private TextBox textBox1;
     }
 }

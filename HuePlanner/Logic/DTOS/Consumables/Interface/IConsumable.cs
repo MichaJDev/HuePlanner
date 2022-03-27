@@ -4,12 +4,8 @@ namespace HuePlanner.Logic.DTOS.Consumables.Interface
 {
     public interface IConsumable
     {
-        public string GetName();
-
-        public PackagingType GetType();
-
-        public void SetName(string name);
-
-        public void SetPackagingType(PackagingType type);
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public PackagingType Packaging { get; set; }
     }
 }

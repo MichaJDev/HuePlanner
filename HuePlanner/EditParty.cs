@@ -8,15 +8,15 @@ using HuePlanner.Logic.Handlers.Interface.Interface;
 
 namespace HuePlanner
 {
-    public partial class Dashboard : System.Windows.Forms.Form
+    public partial class EditParty : System.Windows.Forms.Form
     {
-        IUser user;
+        IParty party;
         IInterfaceHandler ui;
-        public Dashboard(IUser _user)
+        public EditParty(IParty p)
         {
             InitializeComponent();
             ui = new InterfaceHandler();
-            user = _user;
+            party = p;
         }
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
@@ -32,10 +32,6 @@ namespace HuePlanner
                 ReleaseCapture();
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
-
-        }
-        private void OnLoad(object sender, EventArgs e)
-        {
 
         }
     }
