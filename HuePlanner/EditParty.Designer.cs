@@ -33,12 +33,13 @@
             this.pbMin = new System.Windows.Forms.PictureBox();
             this.pbClose = new System.Windows.Forms.PictureBox();
             this.contentPanel = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.profilePanel = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.lblwelcome = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pbMin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbClose)).BeginInit();
             this.contentPanel.SuspendLayout();
@@ -80,12 +81,31 @@
             // 
             this.contentPanel.AutoScroll = true;
             this.contentPanel.BackColor = System.Drawing.Color.Transparent;
+            this.contentPanel.Controls.Add(this.textBox2);
             this.contentPanel.Controls.Add(this.label1);
             this.contentPanel.Controls.Add(this.textBox1);
             this.contentPanel.Location = new System.Drawing.Point(237, 23);
             this.contentPanel.Name = "contentPanel";
             this.contentPanel.Size = new System.Drawing.Size(563, 426);
             this.contentPanel.TabIndex = 7;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label1.Location = new System.Drawing.Point(32, 30);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(61, 24);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Name";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(35, 53);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(166, 23);
+            this.textBox1.TabIndex = 0;
             // 
             // profilePanel
             // 
@@ -125,23 +145,13 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // textBox1
+            // textBox2
             // 
-            this.textBox1.Location = new System.Drawing.Point(35, 53);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(166, 23);
-            this.textBox1.TabIndex = 0;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label1.Location = new System.Drawing.Point(32, 30);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(61, 24);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Name";
+            this.textBox2.Location = new System.Drawing.Point(35, 104);
+            this.textBox2.Multiline = true;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(495, 95);
+            this.textBox2.TabIndex = 2;
             // 
             // EditParty
             // 
@@ -181,5 +191,6 @@
         private PictureBox pictureBox1;
         private Label label1;
         private TextBox textBox1;
+        private TextBox textBox2;
     }
 }

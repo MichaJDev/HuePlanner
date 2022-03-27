@@ -2,6 +2,8 @@
 using HuePlanner.Logic.DTOS.Users;
 using HuePlanner.Logic.DTOS.Users.Interface;
 using MySql.Data.MySqlClient;
+using System.Data;
+using System.Diagnostics;
 
 namespace HuePlanner.Data.Users
 {
@@ -65,15 +67,13 @@ namespace HuePlanner.Data.Users
                 while (sqlReader.Read())
                 {
                     user.SetUUID(sqlReader.GetString(1));
-                    List<IUser> friends = new List<IUser>();
-                    nUser = new User(sqlReader.GetInt32(0),
-                        sqlReader.GetString(1),
+                    nUser = new User(sqlReader.GetString(1),
                         sqlReader.GetString(5),
                         sqlReader.GetString(6),
                         sqlReader.GetString(2),
                         sqlReader.GetString(3),
                         sqlReader.GetString(4),
-                        false, friends
+                        false
                         );
                     con.Close();
                     return nUser;
@@ -82,22 +82,20 @@ namespace HuePlanner.Data.Users
             }
             return nUser;
         }
-        private IUser GetByUUID(IUser user)
+        public IUser GetByUUID(string uuid)
         {
-            IUser nUser = Get(user);
+            IUser nUser = new User();
             using (MySqlConnection con = new MySqlConnection(conString))
             {
                 string query = "SELECT * FROM Users WHERE uuid = @uuid";
                 MySqlCommand command = new MySqlCommand(query, con);
                 command.Parameters.Add("@uuid", MySqlDbType.VarChar);
-                command.Parameters["@uuid"].Value = user.GetUUID();
-                MySqlDataReader sqlReader = command.ExecuteReader();
+                command.Parameters["@uuid"].Value = uuid;
                 con.Open();
+                MySqlDataReader sqlReader = command.ExecuteReader();
                 while (sqlReader.Read())
                 {
-                    user.SetUUID(sqlReader.GetString(1));
-                    nUser = new User(sqlReader.GetInt32(0),
-                        sqlReader.GetString(1),
+                    nUser = new User(sqlReader.GetString(1),
                         sqlReader.GetString(5),
                         sqlReader.GetString(6),
                         sqlReader.GetString(2),
@@ -110,6 +108,21 @@ namespace HuePlanner.Data.Users
                 }
             }
             return nUser;
+        }
+        public DataSet GetDataSetAll()
+        {
+            DataSet ds = new DataSet();
+            using(MySqlConnection con = new MySqlConnection(conString))
+            {
+                string query = "SELECT * FROM users";
+                con.Open();
+                MySqlCommand command = new MySqlCommand(query, con);
+                using (MySqlDataAdapter adapeter = new MySqlDataAdapter(query, con))
+                {
+                    adapeter.Fill(ds);
+                }
+                return ds;
+            }
         }
         public void Update(IUser user)
         {
@@ -130,7 +143,28 @@ namespace HuePlanner.Data.Users
                     return true;
                 return false;
             }
-            return isAdmin;
+        }
+
+        public List<IUser> GetAll()
+        {
+            List<IUser> users = new List<IUser>();
+            IUser user = new User();
+            using (MySqlConnection con = new MySqlConnection(conString))
+            {
+
+                string query = "SELECT * FROM users";
+                con.Open();
+                MySqlCommand command = new MySqlCommand(query, con);
+                MySqlDataReader sqlReader = command.ExecuteReader();
+
+                while (sqlReader.Read())
+                {
+                    users.Add(new User(sqlReader.GetString(1), sqlReader.GetString(5), sqlReader.GetString(6), "", sqlReader.GetString(4), false));
+                    Debug.Write(user.GetName() + "\n");
+                }
+                con.Close();
+                return users;
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "rLr6CUPEks2UHOYpWwZpasRgmKTCyhMZd2pQCD4H4eTXEBH1A9RBiYYL7nBbQ1nrmRaJrkfG98kmJPPgfkjhwg==",
+  "dgSpecHash": "vMNVZDu1geJEtstO9f94sd1C4xab1qUD/umBCqsiT9vk8xCIdJbjYD4j4zOqNt8OPmRq3xPyv9Quqtuv2FwbTA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\xflak\\source\\repos\\HuePlanner\\HuePlanner\\HuePlanner.csproj",
+  "projectFilePath": "G:\\GitHub\\HuePlanner\\HuePlanner\\HuePlanner.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\xflak\\.nuget\\packages\\azure.core\\1.6.0\\azure.core.1.6.0.nupkg.sha512",
     "C:\\Users\\xflak\\.nuget\\packages\\azure.identity\\1.3.0\\azure.identity.1.3.0.nupkg.sha512",

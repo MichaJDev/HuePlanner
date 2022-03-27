@@ -2,6 +2,6 @@
 {
     public enum PackagingType
     {
-        CARTON,ALLUMINUM,STEEL,PLASTIC
+        CARTON,ALLUMINIUM,STEEL,PLASTIC
     }
 }

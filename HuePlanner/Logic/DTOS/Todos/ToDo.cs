@@ -9,6 +9,7 @@ namespace HuePlanner.Logic.DTOS.Todos
 {
     public class ToDo : IToDo
     {
+        public string ID { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
         public bool IsCompleted { get; set; }

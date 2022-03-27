@@ -34,6 +34,7 @@
             this.dragPanel = new System.Windows.Forms.Panel();
             this.pbClose = new System.Windows.Forms.PictureBox();
             this.profilePanel = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.lblwelcome = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -54,6 +55,7 @@
             // 
             // pbMin
             // 
+            this.pbMin.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pbMin.Image = global::HuePlanner.Properties.Resources.minimize;
             this.pbMin.Location = new System.Drawing.Point(709, 1);
             this.pbMin.Name = "pbMin";
@@ -61,6 +63,7 @@
             this.pbMin.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbMin.TabIndex = 10;
             this.pbMin.TabStop = false;
+            this.pbMin.Click += new System.EventHandler(this.pbMin_Click);
             // 
             // dragPanel
             // 
@@ -69,10 +72,12 @@
             this.dragPanel.Name = "dragPanel";
             this.dragPanel.Size = new System.Drawing.Size(711, 25);
             this.dragPanel.TabIndex = 8;
+            this.dragPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dragPanel_MouseDown);
             // 
             // pbClose
             // 
             this.pbClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pbClose.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pbClose.Image = global::HuePlanner.Properties.Resources.Close;
             this.pbClose.Location = new System.Drawing.Point(754, 1);
             this.pbClose.Name = "pbClose";
@@ -80,10 +85,12 @@
             this.pbClose.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbClose.TabIndex = 9;
             this.pbClose.TabStop = false;
+            this.pbClose.Click += new System.EventHandler(this.pbClose_Click);
             // 
             // profilePanel
             // 
             this.profilePanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("profilePanel.BackgroundImage")));
+            this.profilePanel.Controls.Add(this.label1);
             this.profilePanel.Controls.Add(this.panel2);
             this.profilePanel.Controls.Add(this.lblwelcome);
             this.profilePanel.Controls.Add(this.pictureBox1);
@@ -91,6 +98,20 @@
             this.profilePanel.Name = "profilePanel";
             this.profilePanel.Size = new System.Drawing.Size(236, 428);
             this.profilePanel.TabIndex = 11;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label1.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.label1.Location = new System.Drawing.Point(63, 194);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(103, 25);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Add Event";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // panel2
             // 
@@ -153,5 +174,6 @@
         private Panel panel2;
         private Label lblwelcome;
         private PictureBox pictureBox1;
+        private Label label1;
     }
 }

@@ -85,7 +85,7 @@ namespace HuePlanner
 
         private void RegisterUser()
         {
-            Form form = new Form();
+            Form1 form = new Form1();
             IRegisterHandler reg = new RegisterHandler();
             string base64Guid = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
             IEncryptionHandler encryption = new EncryptionHandler();

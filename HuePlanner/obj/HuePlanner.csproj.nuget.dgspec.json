@@ -1,18 +1,21 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\xflak\\source\\repos\\HuePlanner\\HuePlanner\\HuePlanner.csproj": {}
+    "G:\\GitHub\\HuePlanner\\HuePlanner\\HuePlanner.csproj": {}
   },
   "projects": {
-    "C:\\Users\\xflak\\source\\repos\\HuePlanner\\HuePlanner\\HuePlanner.csproj": {
+    "G:\\GitHub\\HuePlanner\\HuePlanner\\HuePlanner.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\xflak\\source\\repos\\HuePlanner\\HuePlanner\\HuePlanner.csproj",
+        "projectUniqueName": "G:\\GitHub\\HuePlanner\\HuePlanner\\HuePlanner.csproj",
         "projectName": "HuePlanner",
-        "projectPath": "C:\\Users\\xflak\\source\\repos\\HuePlanner\\HuePlanner\\HuePlanner.csproj",
+        "projectPath": "G:\\GitHub\\HuePlanner\\HuePlanner\\HuePlanner.csproj",
         "packagesPath": "C:\\Users\\xflak\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\xflak\\source\\repos\\HuePlanner\\HuePlanner\\obj\\",
+        "outputPath": "G:\\GitHub\\HuePlanner\\HuePlanner\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
           "C:\\Users\\xflak\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -75,7 +78,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -151,6 +151,7 @@
             // 
             // pbSubmit
             // 
+            this.pbSubmit.BackColor = System.Drawing.Color.Transparent;
             this.pbSubmit.Image = global::HuePlanner.Properties.Resources.submit;
             this.pbSubmit.Location = new System.Drawing.Point(104, 390);
             this.pbSubmit.Name = "pbSubmit";

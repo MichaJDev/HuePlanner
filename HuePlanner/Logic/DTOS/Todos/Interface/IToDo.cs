@@ -8,6 +8,7 @@ namespace HuePlanner.Logic.DTOS.Todos.Interface
 {
     public interface IToDo
     {
+        public string ID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public bool IsCompleted { get; set; }

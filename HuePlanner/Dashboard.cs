@@ -5,10 +5,12 @@ using HuePlanner.Logic.DTOS.Users;
 using HuePlanner.Logic.DTOS.Users.Interface;
 using HuePlanner.Logic.Handlers.Interface;
 using HuePlanner.Logic.Handlers.Interface.Interface;
+using System.Diagnostics;
+using System.Timers;
 
 namespace HuePlanner
 {
-    public partial class Dashboard : System.Windows.Forms.Form
+    public partial class Dashboard : Form
     {
         IUser user;
         IInterfaceHandler ui;
@@ -17,6 +19,11 @@ namespace HuePlanner
             InitializeComponent();
             ui = new InterfaceHandler();
             user = _user;
+            /*
+             * RefreshContent() Erroring on InvalidOperationException something to do with threads 
+             */
+            // TODO: Revisit
+            //RefreshContent();
         }
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
@@ -36,7 +43,53 @@ namespace HuePlanner
         }
         private void OnLoad(object sender, EventArgs e)
         {
+            lblwelcome.Text = $"{user.GetName()} {user.getSurname()}";
+            ui.GenerateOwnedEvents(this, user, contentPanel);
+        }
 
+        private void pbClose_Click(object sender, EventArgs e)
+        {
+            ui.Close();
+        }
+
+        private void pbMin_Click(object sender, EventArgs e)
+        {
+            ui.Minimize(this);
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+            CreateEvent eventForm = new CreateEvent(this, user);
+            eventForm.Show();
+        }
+        public void RegenerateOwned()
+        {
+            foreach (Control c in contentPanel.Controls.OfType<Label>())
+            {
+                foreach (var item in contentPanel.Controls.OfType<Control>().OrderBy(ee => ee.TabIndex))
+                {
+                    var l = contentPanel.Controls[item.ToString()];
+                    contentPanel.Controls.Remove(l);
+
+                }
+                    
+                ui.GenerateOwnedEvents(this, user, contentPanel);
+            }
+        }
+        public void RefreshContent()
+        {
+            System.Timers.Timer timer = new System.Timers.Timer();
+#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+            timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+            timer.Interval += 5000;
+            timer.Enabled = true;
+        }
+
+        private void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            RegenerateOwned();
         }
     }
 }
+

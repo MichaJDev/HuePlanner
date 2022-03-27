@@ -12,6 +12,8 @@ using HuePlanner.Logic.DTOS.Todos.Interface;
 using HuePlanner.Logic.DTOS.Users;
 using HuePlanner.Logic.DTOS.Users.Interface;
 using MySql.Data.MySqlClient;
+using System.Data;
+using System.Diagnostics;
 
 namespace HuePlanner.Data.Events
 {
@@ -24,8 +26,10 @@ namespace HuePlanner.Data.Events
             IParty party = new Party();
             using (MySqlConnection con = new MySqlConnection(conString))
             {
-                string query = "INSERT INTO 'events' (eventid, name,description,budget,startDate,endDate,strictStartDate,strictEndDate,owner) VALUES (@eventid, @name,@description,@budget,@startDate,@endDate,@strictStartDate,@strictEndDate, @owner)";
-
+                string query = "INSERT INTO events (eventid, name, description, budget, startDate, endDate,owner) VALUES (@eventid, @name,@description,@budget,@startDate,@endDate,@owner)";
+                string eventid = Guid.NewGuid().ToString();
+                p.ID = eventid;
+                con.Open();
                 MySqlCommand command = new MySqlCommand(query, con);
                 command.Parameters.Add("@eventid", MySqlDbType.VarChar);
                 command.Parameters.Add("@name", MySqlDbType.VarChar);
@@ -33,21 +37,15 @@ namespace HuePlanner.Data.Events
                 command.Parameters.Add("@budget", MySqlDbType.Double);
                 command.Parameters.Add("@startDate", MySqlDbType.VarChar);
                 command.Parameters.Add("@endDate", MySqlDbType.VarChar);
-                command.Parameters.Add("@strictStartDate", MySqlDbType.Bit);
-                command.Parameters.Add("@strictEndDate", MySqlDbType.Bit);
                 command.Parameters.Add("@owner", MySqlDbType.VarChar);
 
-                command.Parameters["@eventid"].Value = Guid.NewGuid().ToString();
+                command.Parameters["@eventid"].Value = eventid;
                 command.Parameters["@name"].Value = p.Name;
                 command.Parameters["@description"].Value = p.Description;
                 command.Parameters["@budget"].Value = p.Budget;
                 command.Parameters["@startDate"].Value = p.StartTime.ToString();
                 command.Parameters["@endDate"].Value = p.EndTime.ToString();
-                command.Parameters["@strictStartDate"].Value = p.StrictStartTime;
-                command.Parameters["@strictEndDate"].Value = p.StrictEndTime;
                 command.Parameters["@owner"].Value = p.Owner;
-                con.Open();
-
                 try
                 {
                     command.ExecuteNonQuery();
@@ -55,7 +53,9 @@ namespace HuePlanner.Data.Events
                 catch (MySqlException e)
                 {
                     Console.WriteLine(e.ToString());
+                    Debug.Write(e.Message);
                 }
+                SaveConsumables(p);
                 con.Close();
             }
         }
@@ -68,6 +68,7 @@ namespace HuePlanner.Data.Events
                 MySqlCommand command = new MySqlCommand(query, con);
                 command.Parameters.Add("@id", MySqlDbType.VarChar);
                 command.Parameters["@id"].Value = p.ID;
+                con.Open();
                 try
                 {
                     command.ExecuteNonQuery();
@@ -75,6 +76,7 @@ namespace HuePlanner.Data.Events
                 catch (MySqlException e)
                 {
                     Console.WriteLine(e.ToString());
+                    Debug.Write(e.ToString());
                 }
             }
         }
@@ -84,7 +86,7 @@ namespace HuePlanner.Data.Events
             IParty party = new Party();
             using (MySqlConnection con = new MySqlConnection(conString))
             {
-                string query = "SELECT * WHERE eventid = @id";
+                string query = "SELECT * FROM events WHERE eventid = @id";
                 MySqlCommand command = new MySqlCommand(query, con);
                 command.Parameters.Add("@id", MySqlDbType.VarChar);
                 command.Parameters["@id"].Value = p.ID;
@@ -101,13 +103,30 @@ namespace HuePlanner.Data.Events
                     party.StrictStartTime = sqlReader.GetBoolean(7);
                     party.StrictEndTime = sqlReader.GetBoolean(8);
                     party.Owner = sqlReader.GetString(9);
-                    party.Invited = GetInvited(p);
                     party.Confirmed = GetConfirmed(p);
                     party.Declined = GetDeclined(p);
                     party.Consumables = GetConsumables(p);
                 }
 
                 return party;
+            }
+        }
+        public List<IUser> GetInvitedList(IParty p)
+        {
+            List<IUser> invited = new List<IUser>();
+            using (MySqlConnection con = new MySqlConnection(conString))
+            {
+                string query = "SELECT uuid FROM eventmembers WHERE eventid = @id";
+                MySqlCommand command = new MySqlCommand(query, con);
+                command.Parameters.Add("@id", MySqlDbType.VarChar);
+                command.Parameters["@id"].Value = p.ID;
+                con.Open();
+                MySqlDataReader sqlReader = command.ExecuteReader();
+                while (sqlReader.Read())
+                {
+                    invited.Add(userData.GetByUUID(sqlReader.GetString(0)));
+                }
+                return invited;
             }
         }
 
@@ -136,29 +155,35 @@ namespace HuePlanner.Data.Events
                 return ownedParties;
             }
         }
-
-        public List<IUser> GetInvited(IParty p)
+        public DataSet GetInvited(IParty p)
         {
-            List<IUser> invited = new List<IUser>();
-
+            DataSet ds = new DataSet();
             using (MySqlConnection con = new MySqlConnection(conString))
             {
-                string query = "SELECT * FROM eventconfirmedmembers WHERE eventid = @id";
+                string query = "SELECT uuid FROM eventmembers WHERE eventid = @id";
                 MySqlCommand command = new MySqlCommand(query, con);
-                command.Parameters.Add("@id", MySqlDbType.VarChar);
-                command.Parameters["@id"].Value = p.ID;
+                command.Parameters.AddWithValue("@id", p.ID);
+                Debug.Write(p.ID);
                 con.Open();
+                string query2 = "SELECT * FROM users WHERE uuid = @uuid";
                 MySqlDataReader sqlReader = command.ExecuteReader();
+                string uuid = "";
                 while (sqlReader.Read())
                 {
-                    IUser userUUID = new User();
-                    userUUID.SetUUID(sqlReader.GetString(1));
-                    IUser user = userData.Get(userUUID);
-                    invited.Add(user);
-                }
+                    uuid = sqlReader.GetString(0);
 
+                }
+                con.Close();
+                con.Open();
+                using (MySqlDataAdapter adapter = new MySqlDataAdapter(query2, con))
+                {
+                    adapter.SelectCommand.Parameters.AddWithValue("@uuid", uuid);
+                    adapter.Fill(ds);
+
+
+                }
+                return ds;
             }
-            return invited;
         }
 
         public void Update(PartyEditType type, IParty p)
@@ -183,6 +208,7 @@ namespace HuePlanner.Data.Events
                         catch (MySqlException e)
                         {
                             Console.WriteLine(e.ToString());
+                            Debug.Write(e.ToString());
                         }
                     }
                     break;
@@ -203,6 +229,7 @@ namespace HuePlanner.Data.Events
                         catch (MySqlException e)
                         {
                             Console.WriteLine(e.ToString());
+                            Debug.Write(e.ToString());
                         }
                     }
 
@@ -225,6 +252,7 @@ namespace HuePlanner.Data.Events
                         catch (MySqlException e)
                         {
                             Console.WriteLine(e.ToString());
+                            Debug.Write(e.ToString());
                         }
                     }
                     break;
@@ -245,6 +273,7 @@ namespace HuePlanner.Data.Events
                         catch (MySqlException e)
                         {
                             Console.WriteLine(e.ToString());
+                            Debug.Write(e.ToString());
                         }
                     }
                     break;
@@ -265,6 +294,7 @@ namespace HuePlanner.Data.Events
                         catch (MySqlException e)
                         {
                             Console.WriteLine(e.ToString());
+                            Debug.Write(e.ToString());
                         }
                     }
 
@@ -286,6 +316,7 @@ namespace HuePlanner.Data.Events
                         catch (MySqlException e)
                         {
                             Console.WriteLine(e.ToString());
+                            Debug.Write(e.ToString());
                         }
                     }
                     break;
@@ -305,6 +336,7 @@ namespace HuePlanner.Data.Events
                         catch (MySqlException e)
                         {
                             Console.WriteLine(e.ToString());
+                            Debug.Write(e.ToString());
                         }
                     }
                     break;
@@ -325,6 +357,7 @@ namespace HuePlanner.Data.Events
                         catch (MySqlException e)
                         {
                             Console.WriteLine(e.ToString());
+                            Debug.Write(e.ToString());
                         }
                     }
                     break;
@@ -339,7 +372,7 @@ namespace HuePlanner.Data.Events
 
             using (MySqlConnection con = new MySqlConnection(conString))
             {
-                string query = "SELECT * FROM eventconfirmedmembers WHERE eventid = @id";
+                string query = "SELECT uuid FROM eventconfirmedmembers WHERE eventid = @id";
                 MySqlCommand command = new MySqlCommand(query, con);
                 command.Parameters.Add("@id", MySqlDbType.VarChar);
                 command.Parameters["@id"].Value = p.ID;
@@ -347,10 +380,7 @@ namespace HuePlanner.Data.Events
                 MySqlDataReader sqlReader = command.ExecuteReader();
                 while (sqlReader.Read())
                 {
-                    IUser userUUID = new User();
-                    userUUID.SetUUID(sqlReader.GetString(1));
-                    IUser user = userData.Get(userUUID);
-                    confirmed.Add(user);
+                    confirmed.Add(userData.GetByUUID(sqlReader.GetString(0)));
                 }
                 return confirmed;
             }
@@ -394,9 +424,10 @@ namespace HuePlanner.Data.Events
                 while (sqlReader.Read())
                 {
                     IToDo todo = new ToDo();
-                    todo.Name = sqlReader.GetString(2);
-                    todo.Description = sqlReader.GetString(3);
-                    todo.IsCompleted = sqlReader.GetBoolean(5);
+                    todo.ID = sqlReader.GetString(1);
+                    todo.Name = sqlReader.GetString(4);
+                    todo.Description = sqlReader.GetString(5);
+                    todo.IsCompleted = sqlReader.GetBoolean(3);
                     todos.Add(todo);
                 }
                 return todos;
@@ -426,7 +457,7 @@ namespace HuePlanner.Data.Events
             }
         }
 
-        public PackagingType GetPackagingType(string var)
+        private PackagingType GetPackagingType(string var)
         {
             switch (var)
             {
@@ -434,7 +465,7 @@ namespace HuePlanner.Data.Events
                     return PackagingType.CARTON;
 
                 case "ALLUMINUM":
-                    return PackagingType.ALLUMINUM;
+                    return PackagingType.ALLUMINIUM;
 
                 case "STEEL":
                     return PackagingType.STEEL;
@@ -447,23 +478,154 @@ namespace HuePlanner.Data.Events
             }
         }
 
-        public void UpdateTodos(IParty p)
+        public void UpdateTodos(IToDo t, IParty p)
         {
             string query;
             using (MySqlConnection con = new MySqlConnection(conString))
             {
-                query = "UPDATE FROM todos SET name = @name, description = @desc, completed = @completed WHERE eventid = @id";
+                query = "INSERT INTO todos (todoid, eventid, completed, name, description) VALUES (@todoid,@id,@completed,@name, @desc)";
                 MySqlCommand command = new MySqlCommand(query, con);
+                con.Open();
                 command.Parameters.Add("@name", MySqlDbType.VarChar);
                 command.Parameters.Add("@desc", MySqlDbType.Text);
                 command.Parameters.Add("@completed", MySqlDbType.Byte);
                 command.Parameters.Add("@id", MySqlDbType.VarChar);
-                foreach (IToDo t in p.Todos)
+                command.Parameters.Add("@todoid", MySqlDbType.VarChar);
+
+                command.Parameters["@name"].Value = t.Name;
+                command.Parameters["@desc"].Value = t.Description;
+                command.Parameters["@completed"].Value = t.IsCompleted;
+                command.Parameters["@id"].Value = p.ID;
+                command.Parameters["@todoid"].Value = Guid.NewGuid().ToString();
+                try
                 {
-                    command.Parameters["@name"].Value = t.Name;
-                    command.Parameters["@desc"].Value = t.Description;
-                    command.Parameters["@completed"].Value = t.IsCompleted;
+                    command.ExecuteNonQuery();
+                }
+                catch (MySqlException e)
+                {
+                    Console.WriteLine(e.ToString());
+                    Debug.Write(e.ToString());
+                }
+                con.Close();
+
+            }
+        }
+
+        public void UpdateConfirmed(IUser u, IParty p)
+        {
+            Debug.Write(u.GetName() + " " + u.GetUUID() + "\n");
+            string query;
+            using (MySqlConnection con = new MySqlConnection(conString))
+            {
+                query = "INSERT INTO eventconfirmedmembers (eventid, uuid) VALUES (@id, @uuid)";
+                MySqlCommand command = new MySqlCommand(query, con);
+                command.Parameters.Add("@id", MySqlDbType.VarChar);
+                command.Parameters.Add("@uuid", MySqlDbType.VarChar);
+                command.Parameters["@id"].Value = p.ID;
+                command.Parameters["@uuid"].Value = u.GetUUID();
+
+                con.Open();
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch (MySqlException e)
+                {
+                    Debug.Write(e.Message + "\n" + e.StackTrace);
+                }
+                con.Close();
+            }
+        }
+
+        public void UpdateDeclined(IUser u, IParty p)
+        {
+            string query;
+            using (MySqlConnection con = new MySqlConnection(conString))
+            {
+                query = "INSERT INTO eventdeclinedmembers (eventid, uuid) VALUES (@id, @uuid)";
+                MySqlCommand command = new MySqlCommand(query, con);
+                command.Parameters.Add("@id", MySqlDbType.VarChar);
+                command.Parameters.Add("@uuid", MySqlDbType.VarChar);
+                command.Parameters["@id"].Value = p.ID;
+                command.Parameters["@uuid"].Value = u.GetUUID;
+                con.Open();
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch (MySqlException e)
+                {
+                    Debug.Write(e.Message + "\n" + e.StackTrace);
+                }
+                con.Close();
+            }
+        }
+
+        public void UpdateInvited(IUser u, IParty p)
+        {
+            string query;
+            using (MySqlConnection con = new MySqlConnection(conString))
+            {
+                query = "INSERT INTO eventmembers (eventid, uuid) VALUES (@id, @uuid)";
+                MySqlCommand command = new MySqlCommand(query, con);
+                command.Parameters.Add("@id", MySqlDbType.VarChar);
+                command.Parameters.Add("@uuid", MySqlDbType.VarChar);
+                command.Parameters["@id"].Value = p.ID;
+                command.Parameters["@uuid"].Value = u.GetUUID();
+                con.Open();
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch (MySqlException e)
+                {
+                    Debug.Write(e.Message + "\n" + e.StackTrace);
+                }
+            }
+        }
+
+        public void UpdateConsumables(IConsumable c, IParty p)
+        {
+
+            using (MySqlConnection con = new MySqlConnection(conString))
+            {
+                string query = "INSERT INTO consumables (eventid, name, type) VALUES (@id,@name,@type)";
+                con.Open();
+                MySqlCommand command = new MySqlCommand(query, con);
+                command.Parameters.Add("@id", MySqlDbType.VarChar);
+                command.Parameters.Add("@name", MySqlDbType.VarChar);
+                command.Parameters.Add("@type", MySqlDbType.VarChar);
+                command.Parameters["@id"].Value = p.ID;
+                command.Parameters["@name"].Value = c.Name;
+                command.Parameters["@type"].Value = c.Packaging.ToString();
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch (MySqlException e)
+                {
+                    Console.WriteLine(e.ToString());
+                    Debug.Write(e.ToString());
+                }
+                con.Close();
+            }
+        }
+
+        private void SaveConsumables(IParty p)
+        {
+            string query = "INSERT INTO consumables (eventid, name, type) VALUES (@id,@name,@type)";
+            using (MySqlConnection con = new MySqlConnection(conString))
+            {
+                foreach (IConsumable c in p.Consumables)
+                {
+                    con.Open();
+                    MySqlCommand command = new MySqlCommand(query, con);
+                    command.Parameters.Add("@id", MySqlDbType.VarChar);
+                    command.Parameters.Add("@name", MySqlDbType.VarChar);
+                    command.Parameters.Add("@type", MySqlDbType.VarChar);
                     command.Parameters["@id"].Value = p.ID;
+                    command.Parameters["@name"].Value = c.Name;
+                    command.Parameters["@type"].Value = c.Packaging.ToString();
                     try
                     {
                         command.ExecuteNonQuery();
@@ -471,201 +633,10 @@ namespace HuePlanner.Data.Events
                     catch (MySqlException e)
                     {
                         Console.WriteLine(e.ToString());
+                        Debug.Write(e.ToString());
                     }
-                }
-            }
-        }
+                    con.Close();
 
-        public void UpdateConfirmed(IParty p)
-        {
-            string query;
-            using (MySqlConnection con = new MySqlConnection(conString))
-            {
-                query = "SELECT COUNT(*) FROM eventconfirmedmembers WHERE eventid = @id";
-                MySqlCommand command = new MySqlCommand(query, con);
-                command.Parameters.Add("@id", MySqlDbType.VarChar);
-                command.Parameters["@id"].Value = p.ID;
-
-                int countCurrent = (int)command.ExecuteScalar();
-                if (p.Confirmed.Count > countCurrent)
-                {
-                    query = "SELECT * FROM eventconfirmedmembers WHERE eventid = @id";
-                    command.CommandText = query;
-                    MySqlDataReader sqlReader = command.ExecuteReader();
-                    int i = 0;
-                    while (sqlReader.Read())
-                    {
-                        foreach (IUser user in p.Confirmed)
-                        {
-                            if (!(user.GetUUID() == sqlReader.GetString(1)))
-                            {
-                                query = "INSERT INTO eventconfirmedmembers (eventid, uuid) VALUES (@id, @uuid)";
-                                command.CommandText = query;
-                                command.Parameters.Add("@id", MySqlDbType.VarChar);
-                                command.Parameters.Add("@uuid", MySqlDbType.VarChar);
-                                foreach (IUser u in p.Confirmed)
-                                {
-                                    command.Parameters["@id"].Value = p.ID;
-                                    command.Parameters["@uuid"].Value = u.GetUUID();
-
-                                    try
-                                    {
-                                        command.ExecuteNonQuery();
-                                    }
-                                    catch (MySqlException e)
-                                    {
-                                        Console.WriteLine(e.ToString());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        public void UpdateDeclined(IParty p)
-        {
-            string query;
-            using (MySqlConnection con = new MySqlConnection(conString))
-            {
-                query = "SELECT COUNT(*) FROM eventdeclinedmembers WHERE eventid = @id";
-                MySqlCommand command = new MySqlCommand(query, con);
-                command.Parameters.Add("@id", MySqlDbType.VarChar);
-                command.Parameters["@id"].Value = p.ID;
-
-                int countCurrent = (int)command.ExecuteScalar();
-                if (p.Declined.Count > countCurrent)
-                {
-                    query = "SELECT * FROM eventdeclinedmembers WHERE eventid = @id";
-                    command.CommandText = query;
-                    MySqlDataReader sqlReader = command.ExecuteReader();
-                    int i = 0;
-                    while (sqlReader.Read())
-                    {
-                        foreach (IUser user in p.Declined)
-                        {
-                            if (!(user.GetUUID() == sqlReader.GetString(1)))
-                            {
-                                query = "INSERT INTO eventdeclinedmembers (eventid, uuid) VALUES (@id, @uuid)";
-                                command.CommandText = query;
-                                command.Parameters.Add("@id", MySqlDbType.VarChar);
-                                command.Parameters.Add("@uuid", MySqlDbType.VarChar);
-                                foreach (IUser u in p.Declined)
-                                {
-                                    command.Parameters["@id"].Value = p.ID;
-                                    command.Parameters["@uuid"].Value = u.GetUUID();
-
-                                    try
-                                    {
-                                        command.ExecuteNonQuery();
-                                    }
-                                    catch (MySqlException e)
-                                    {
-                                        Console.WriteLine(e.ToString());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        public void UpdateInvited(IParty p)
-        {
-            string query;
-            using (MySqlConnection con = new MySqlConnection(conString))
-            {
-                query = "SELECT COUNT(*) FROM eventmembers WHERE eventid = @id";
-                MySqlCommand command = new MySqlCommand(query, con);
-                command.Parameters.Add("@id", MySqlDbType.VarChar);
-                command.Parameters["@id"].Value = p.ID;
-
-                int countCurrent = (int)command.ExecuteScalar();
-                if (p.Invited.Count > countCurrent)
-                {
-                    query = "SELECT * FROM eventmembers WHERE eventid = @id";
-                    command.CommandText = query;
-                    MySqlDataReader sqlReader = command.ExecuteReader();
-                    int i = 0;
-                    while (sqlReader.Read())
-                    {
-                        foreach (IUser user in p.Invited)
-                        {
-                            if (!(user.GetUUID() == sqlReader.GetString(1)))
-                            {
-                                query = "INSERT INTO eventmembers (eventid, uuid) VALUES (@id, @uuid)";
-                                command.CommandText = query;
-                                command.Parameters.Add("@id", MySqlDbType.VarChar);
-                                command.Parameters.Add("@uuid", MySqlDbType.VarChar);
-                                foreach (IUser u in p.Invited)
-                                {
-                                    command.Parameters["@id"].Value = p.ID;
-                                    command.Parameters["@uuid"].Value = u.GetUUID();
-
-                                    try
-                                    {
-                                        command.ExecuteNonQuery();
-                                    }
-                                    catch (MySqlException e)
-                                    {
-                                        Console.WriteLine(e.ToString());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        public void UpdateConsumables(IParty p)
-        {
-            string query;
-            using (MySqlConnection con = new MySqlConnection(conString))
-            {
-                query = "SELECT COUNT(*) FROM consumables WHERE eventid = @id";
-                MySqlCommand command = new MySqlCommand(query, con);
-                command.Parameters.Add("@id", MySqlDbType.VarChar);
-                command.Parameters["@id"].Value = p.ID;
-
-                int countCurrent = (int)command.ExecuteScalar();
-                if (p.Confirmed.Count > countCurrent)
-                {
-                    query = "SELECT * FROM consumables WHERE eventid = @id";
-                    command.CommandText = query;
-                    MySqlDataReader sqlReader = command.ExecuteReader();
-                    int i = 0;
-                    while (sqlReader.Read())
-                    {
-                        foreach (Consumable c in p.Consumables)
-                        {
-                            if (!(c.Id == sqlReader.GetInt32(0)))
-                            {
-                                query = "INSERT INTO consumables (eventid, name,type) VALUES (@id, @name,@type)";
-                                command.CommandText = query;
-                                command.Parameters.Add("@id", MySqlDbType.Int32);
-                                command.Parameters.Add("@name", MySqlDbType.VarChar);
-                                command.Parameters.Add("@type", MySqlDbType.VarChar);
-                                foreach (Consumable cons in p.Confirmed)
-                                {
-                                    command.Parameters["@id"].Value = p.ID;
-                                    command.Parameters["@name"].Value = cons.Name;
-                                    command.Parameters["@type"].Value = cons.Packaging.ToString();
-
-                                    try
-                                    {
-                                        command.ExecuteNonQuery();
-                                    }
-                                    catch (MySqlException e)
-                                    {
-                                        Console.WriteLine(e.ToString());
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
             }
         }

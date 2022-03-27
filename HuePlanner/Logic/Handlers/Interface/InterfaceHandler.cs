@@ -1,29 +1,36 @@
 ﻿using HuePlanner.Data.Events;
 using HuePlanner.Data.Events.Interfaces;
+using HuePlanner.Logic.DTOS.Parties;
 using HuePlanner.Logic.DTOS.Parties.Interface;
 using HuePlanner.Logic.DTOS.Users.Interface;
 using HuePlanner.Logic.Handlers.Interface.Interface;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace HuePlanner.Logic.Handlers.Interface
 {
-   
+
     public class InterfaceHandler : IInterfaceHandler
     {
-        Form? form;
-        IUser? user;
-        IParty? party;
-        Panel? panelMain;
-
+        private Form? form;
+        private IUser? user;
+        private IParty? party;
+        private Panel? panelMain;
+        private string id = "";
         private IEventDataHandler eventData = new EventDataHandler();
 
         public void Close()
         {
             Application.Exit();
+        }
+
+        public void CloseFrame(Form form)
+        {
+            form.Hide();
         }
 
         public void Maximize(System.Windows.Forms.Form form)
@@ -50,47 +57,71 @@ namespace HuePlanner.Logic.Handlers.Interface
 
         public void GenerateOwnedEvents(Form _form, IUser _user, Panel panel)
         {
+            FontFamily fontFamily = new FontFamily("Arial");
+            Font font = new Font(fontFamily, 16, FontStyle.Regular, GraphicsUnit.Pixel);
+            Font headingFont = new Font(fontFamily, 18, FontStyle.Bold, GraphicsUnit.Pixel);
             List<IParty> parties = eventData.GetOwned(_user);
-            foreach (IParty p in parties)
+            if (parties != null)
             {
-                party = p;
-                form = _form;
-                user = _user;
-                panelMain = panel;
+                int x = 15;
+                int y = 50;
+                int width = 500;
+                int height = 25;
+                Label heading = new Label();
+                heading.Text = "Your Events";
+                heading.Font = headingFont;
+                heading.Location = new Point(15, 15);
+                heading.Size = new Size(width, height + 5);
+                panel.Controls.Add(heading);
+
+                foreach (IParty p in parties)
+                {
+
+                    party = p;
+                    form = _form;
+                    user = _user;
+                    panelMain = panel;
+
+                    Label l = new Label();
+                    l.Text = $"{p.Name} | {GetShortString(p.Description)}...";
+                    l.Location = new Point(x, y);
+                    l.Size = new Size(width, height);
+                    l.Font = font;
+                    l.Name = p.ID;
+                    id = p.Name;
+                    l.ForeColor = Color.White;
+                    l.Cursor = Cursors.Hand;
+                    l.Click += new EventHandler(label_onClick);
+
+                    panel.Controls.Add(l);
+                    y += 25;
+                }
+            }
+            else
+            {
                 int x = 10;
                 int y = 10;
                 int width = 200;
                 int height = 15;
                 Label l = new Label();
-                l.Text = $"{p.Name} | {GetShortString(p.Description)} | {p.Invited.Count()} | { p.Confirmed.Count()}";
-                l.Location = new Point(x, y);
-                l.Size = new Size(width, height);
-                l.Font = new Font(FontFamily.GenericSerif, 15);
-                PictureBox editBox = new PictureBox();
-                editBox.Location = new Point(x, y + width + 10);
-                editBox.Size = new Size(32, 32);
-                editBox.SizeMode = PictureBoxSizeMode.StretchImage;
-                editBox.BackgroundImage = Properties.Resources.edit;
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-                editBox.Click += new EventHandler(PBEdit_OnClick);
-#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-                editBox.Cursor = Cursors.Hand;
-                PictureBox deleteBox = new PictureBox();
-                deleteBox.Location = new Point(x, y + width + 52);
-                deleteBox.Size = new Size(32, 32);
-                deleteBox.SizeMode = PictureBoxSizeMode.StretchImage;
-                deleteBox.BackgroundImage = Properties.Resources.delete;
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-                deleteBox.Click += new EventHandler(PBDelete_OnClick);
-#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-                deleteBox.Cursor = Cursors.Hand;
-
+                l.Text = "You haven't added any events yet";
                 panel.Controls.Add(l);
-                panel.Controls.Add(editBox);
-                panel.Controls.Add(deleteBox);
-                y += 25;
             }
         }
+
+        private void label_onClick(object sender, EventArgs e)
+        {
+            if (sender is Label)
+            {
+                party.ID = ((Label)sender).Name;
+            }
+            Debug.Write(party.ID + "\n");
+            IParty p = eventData.Get(party);
+            ViewEvent eventView = new ViewEvent(p, user);
+            eventView.Show();
+
+        }
+
         public void GenerateInvitedMembers(Form form, IParty p, Panel panel)
         {
 
@@ -114,15 +145,9 @@ namespace HuePlanner.Logic.Handlers.Interface
 
         private string GetShortString(string s)
         {
-            return s.Substring(0, 15);
-        }
-        private void PBDelete_OnClick(object sender, EventArgs e)
-        {
-            eventData.Delete(party);
-            GenerateOwnedEvents(form, user, panelMain);
-        }
-        private void PBEdit_OnClick(object sender, EventArgs e)
-        {
+            if (s != null)
+                return s.Substring(0, s.Length - 5);
+            return "";
         }
     }
 }

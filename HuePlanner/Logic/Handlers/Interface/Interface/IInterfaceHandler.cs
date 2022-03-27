@@ -8,6 +8,7 @@ namespace HuePlanner.Logic.Handlers.Interface.Interface
         public void Minimize(System.Windows.Forms.Form form);
         public void Maximize(System.Windows.Forms.Form form);
         public void Close();
+        public void CloseFrame(Form form);
         public void GenerateOwnedEvents(Form form, IUser user, Panel panel);
         public void GenerateInvitedMembers(Form form, IParty p, Panel panel);
         public void GenerateConfirmedMembers(Form form, IParty p, Panel panel);
