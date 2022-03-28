@@ -273,7 +273,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "ViewEvent";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "  ";
+            this.Text = " ";
             this.Load += new System.EventHandler(this.ViewEvent_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbxdelete)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbxclose)).EndInit();

@@ -1,4 +1,4 @@
-﻿using HuePlanner.Data.Users;
+﻿ using HuePlanner.Data.Users;
 using HuePlanner.Data.Users.Interface;
 using HuePlanner.Logic.DTOS.Parties.Interface;
 using HuePlanner.Logic.DTOS.Users;

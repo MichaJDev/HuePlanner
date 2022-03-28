@@ -10,8 +10,11 @@
 
   <ItemGroup>
     <Compile Remove="Forms\**" />
+    <Compile Remove="Logic\Handlers\Events\**" />
     <EmbeddedResource Remove="Forms\**" />
+    <EmbeddedResource Remove="Logic\Handlers\Events\**" />
     <None Remove="Forms\**" />
+    <None Remove="Logic\Handlers\Events\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,9 +26,6 @@
 
   <ItemGroup>
     <Compile Update="Dashboard.cs" />
-    <Compile Update="EditParty.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -38,10 +38,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Logic\Handlers\Events\Interface\" />
   </ItemGroup>
 
 </Project>

@@ -97,7 +97,7 @@ namespace HuePlanner
             //}
         }
 
-        public string StringifyBoolean(bool c)
+        private string StringifyBoolean(bool c)
         {
             if (c == true)
                 return "Completed";
