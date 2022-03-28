@@ -47,7 +47,7 @@ namespace HuePlanner
         private void lblLogin_OnClick(object sender, EventArgs e)
         {
             this.Hide();
-            Form form = new Form();
+            Form1 form = new Form1();
             form.Show();
         }
         private void lblLogin_MouseHover(object sender, EventArgs e)

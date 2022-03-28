@@ -8,8 +8,6 @@ namespace HuePlanner.Logic.DTOS.Consumables.Drinks.Interface
 {
     internal interface IDrink
     {
-        public int GetContent();
-
-        public void SetContent(int content);
+        public double Content { get; set; }
     }
 }

@@ -8,9 +8,6 @@ namespace HuePlanner.Logic.DTOS.Consumables.Snacks.Interface
 {
     public interface ISnack
     {
-
-        public int GetContent();
-
-        public void SetContent(int content);
+        public int Amount { get; set; }
     }
 }

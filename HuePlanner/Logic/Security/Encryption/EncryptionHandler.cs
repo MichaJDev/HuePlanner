@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace HuePlanner.Logic.Security.Encryption
 {
-    internal class EncryptionHandler : IEncryptionHandler
+    public class EncryptionHandler : IEncryptionHandler
     {
         IUserDataHandler userData = new  UserDataHandler();
         public bool Compare(IUser user)

@@ -27,7 +27,6 @@ namespace HuePlanner.Logic.DTOS.Parties.Interface
         public List<IUser> Declined { get; set; }
         public double Budget { get; set; }
         public List<IConsumable> Consumables { get; set; }
-
         public string Owner { get; set; }
     }
 }

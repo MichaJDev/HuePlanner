@@ -9,16 +9,6 @@ namespace HuePlanner.Logic.DTOS.Consumables.Drinks
 {
     public class Drink : Consumable, IDrink
     {
-        private int content;
-
-        public int GetContent()
-        {
-            return content;
-        }
-
-        public void SetContent(int _content)
-        {
-            content = _content;
-        }
+        public double Content { get; set; }
     }
 }

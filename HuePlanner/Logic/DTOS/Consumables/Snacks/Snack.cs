@@ -4,16 +4,8 @@ namespace HuePlanner.Logic.DTOS.Consumables.Snacks
 {
     public class Snack : Consumable, ISnack
     {
-        private int content;
+        public int Amount { get; set; }
 
-        public int GetContent()
-        {
-            return content;
-        }
 
-        public void SetContent(int _content)
-        {
-            content = _content;
-        }
     }
 }
